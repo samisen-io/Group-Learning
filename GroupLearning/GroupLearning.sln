@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupLearning", "GroupLearning\GroupLearning\GroupLearning.csproj", "{4126D62F-D012-4E66-AB4B-5816E94FD2BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupLearning.Client", "GroupLearning\GroupLearning.Client\GroupLearning.Client.csproj", "{69285B0A-7B6C-4AF6-99FD-954C8E0A858B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4126D62F-D012-4E66-AB4B-5816E94FD2BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4126D62F-D012-4E66-AB4B-5816E94FD2BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4126D62F-D012-4E66-AB4B-5816E94FD2BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4126D62F-D012-4E66-AB4B-5816E94FD2BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69285B0A-7B6C-4AF6-99FD-954C8E0A858B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69285B0A-7B6C-4AF6-99FD-954C8E0A858B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69285B0A-7B6C-4AF6-99FD-954C8E0A858B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69285B0A-7B6C-4AF6-99FD-954C8E0A858B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DB9B1914-260F-4CFC-A60A-D018F20CC6B6}
+	EndGlobalSection
+EndGlobal
