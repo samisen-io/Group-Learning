@@ -3,11 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GroupLearning.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
-
-    public DbSet<App> App { get; set; }
+  public DbSet<App> App { get; set; }
 }

@@ -1,6 +1,8 @@
 using GroupLearning.Client.Pages;
 using GroupLearning.Components;
 using GroupLearning.Data;
+using GroupLearning.Interfaces.DataServices;
+using GroupLearning.Services.DataServices;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(
   builder.Configuration.GetConnectionString("localDb")));
+
+builder.Services.AddScoped<IAppService, AppService>();
 
 var app = builder.Build();
 

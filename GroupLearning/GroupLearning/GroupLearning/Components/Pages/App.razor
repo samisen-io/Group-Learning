@@ -1,0 +1,83 @@
+﻿@page "/app"
+@using GroupLearning.Interfaces.DataServices
+@using GroupLearning.Models
+@inject IAppService AppService
+
+<PageTitle>App</PageTitle>
+
+<h1>App Management</h1>
+
+<p>This component demonstrates inserting and showing data.</p>
+
+<h2>Insert New App</h2>
+<EditForm Model="newApp" OnValidSubmit="HandleValidSubmit">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+
+  <div class="form-group">
+    <label for="name">Name:</label>
+    <InputText id="name" class="form-control" @bind-Value="newApp.Name" />
+  </div>
+  <div class="form-group">
+    <label for="description">Description:</label>
+    <InputTextArea id="description" class="form-control" @bind-Value="newApp.Description" />
+  </div>
+  <button type="submit" class="btn btn-primary">Add App</button>
+</EditForm>
+
+<h2>Existing Apps</h2>
+
+@if (apps == null)
+{
+  <p><em>Loading...</em></p>
+}
+else if (!apps.Any())
+{
+  <p>No apps available.</p>
+}
+else
+{
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Table Ready</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var app in apps)
+      {
+        <tr>
+          <td>@app.Id</td>
+          <td>@app.Name</td>
+          <td>@app.TableReady</td>
+          <td>@app.Description</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+
+@code {
+  private Models.App newApp = new();
+  private IEnumerable<Models.App>? apps;
+
+  protected override async Task OnInitializedAsync()
+  {
+    await LoadApps();
+  }
+
+  private async Task LoadApps()
+  {
+    apps = await AppService.GetAllAppsAsync();
+  }
+
+  private async Task HandleValidSubmit()
+  {
+    await AppService.InsertAppAsync(newApp);
+    newApp = new Models.App(); // Clear the form
+    await LoadApps(); // Refresh the list
+  }
+}

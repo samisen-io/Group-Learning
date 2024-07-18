@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupLearning", "GroupLearning\GroupLearning\GroupLearning.csproj", "{4126D62F-D012-4E66-AB4B-5816E94FD2BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GroupLearning", "GroupLearning\GroupLearning\GroupLearning.csproj", "{4126D62F-D012-4E66-AB4B-5816E94FD2BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupLearning.Client", "GroupLearning\GroupLearning.Client\GroupLearning.Client.csproj", "{69285B0A-7B6C-4AF6-99FD-954C8E0A858B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GroupLearning.Client", "GroupLearning\GroupLearning.Client\GroupLearning.Client.csproj", "{69285B0A-7B6C-4AF6-99FD-954C8E0A858B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
