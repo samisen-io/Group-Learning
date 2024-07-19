@@ -15,6 +15,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(
   builder.Configuration.GetConnectionString("localDb")));
 
+// Change to AddScoped for proper handling of DbContext lifecycle
 builder.Services.AddScoped<IAppService, AppService>();
 
 var app = builder.Build();
@@ -40,5 +41,19 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(GroupLearning.Client._Imports).Assembly);
+
+// Create a scope for service resolution and usage
+using (var scope = app.Services.CreateScope())
+{
+  var scopedServices = scope.ServiceProvider;
+  var appService = scopedServices.GetRequiredService<IAppService>();
+  var appModel = await appService.InsertAppAsync(new GroupLearning.Models.App()
+  {
+    Name = "app",
+    Description = "app",
+  });
+
+  var getAppModel = await appService.GetAppByIdAsync(appModel.Id);
+}
 
 app.Run();
