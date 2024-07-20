@@ -14,6 +14,18 @@ public class UserService : IUserService
     _context = context;
   }
 
+  public async Task<User> GetUserByCredentialsAsync(string email, string password)
+  {
+    // Find user by username
+    var user = await _context.User.FirstOrDefaultAsync(u => u.Email == email);
+    if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+    {
+      return null;
+    }
+
+    return user;
+  }
+
   public async Task<User> GetUserByIdAsync(int id)
   {
     return await _context.User.FindAsync(id);
@@ -26,6 +38,8 @@ public class UserService : IUserService
 
   public async Task<User> CreateUserAsync(User user)
   {
+    user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
+
     _context.User.Add(user);
     await _context.SaveChangesAsync();
     return user;
