@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GroupLearning.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240720115733_userTableUpdatesForDatesAndGuid")]
     partial class userTableUpdatesForDatesAndGuid
     {

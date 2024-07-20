@@ -8,9 +8,9 @@ namespace GroupLearning.Services.DataServices;
 
 public class AppService : IAppService
 {
-  private readonly AppDbContext _appDbContext;
+  private readonly ApplicationDbContext _appDbContext;
 
-  public AppService(AppDbContext appDbContext)
+  public AppService(ApplicationDbContext appDbContext)
   {
     _appDbContext = appDbContext;
   }

@@ -1,9 +1,8 @@
-using GroupLearning.Client.Pages;
-using GroupLearning.Components;
 using GroupLearning.Data;
 using GroupLearning.Interfaces.DataServices;
 using GroupLearning.Services.DataServices;
 using Microsoft.EntityFrameworkCore;
+using App = GroupLearning.Components.App;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +11,17 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(
   builder.Configuration.GetConnectionString("localDb")));
 
 // Change to AddScoped for proper handling of DbContext lifecycle
 builder.Services.AddScoped<IAppService, AppService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserGroupService, UserGroupService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 var app = builder.Build();
 

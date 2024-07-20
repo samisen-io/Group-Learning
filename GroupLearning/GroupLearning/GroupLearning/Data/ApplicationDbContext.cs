@@ -4,7 +4,7 @@ using File = GroupLearning.Models.File;
 
 namespace GroupLearning.Data;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
   public DbSet<App> App { get; set; }
   public DbSet<User> User { get; set; }
