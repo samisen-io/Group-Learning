@@ -39,7 +39,6 @@ public class UserService : IUserService
   public async Task<User> CreateUserAsync(User user)
   {
     user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-
     _context.User.Add(user);
     await _context.SaveChangesAsync();
     return user;

@@ -4,6 +4,7 @@ namespace GroupLearning.Interfaces.DataServices;
 
 public interface IUserService
 {
+    Task<User> GetUserByCredentialsAsync(string email, string password);
     Task<User> GetUserByIdAsync(int id);
     Task<IEnumerable<User>> GetAllUsersAsync();
     Task<User> CreateUserAsync(User user);

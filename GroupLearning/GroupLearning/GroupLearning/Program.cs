@@ -2,11 +2,13 @@ using GroupLearning.Data;
 using GroupLearning.Interfaces.DataServices;
 using GroupLearning.Services.DataServices;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using App = GroupLearning.Components.App;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
@@ -23,12 +25,24 @@ builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
+// Add Swagger services
+builder.Services.AddSwaggerGen(c =>
+{
+  c.SwaggerDoc("v1", new OpenApiInfo { Title = "GroupLearning API", Version = "v1" });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
   app.UseWebAssemblyDebugging();
+  app.UseSwagger();
+  app.UseSwaggerUI(c =>
+  {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "GroupLearning API v1");
+    c.RoutePrefix = "Swagger"; // To serve the Swagger UI at the app's root (http://localhost:<port>/)
+  });
 }
 else
 {
@@ -38,9 +52,19 @@ else
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseAntiforgery();
+
+app.UseEndpoints(endpoints =>
+{
+  endpoints.MapControllers();
+  endpoints.MapBlazorHub();
+  endpoints.MapFallbackToPage("/_Host");
+});
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
