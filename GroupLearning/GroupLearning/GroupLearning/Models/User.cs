@@ -1,12 +1,11 @@
-﻿using BCrypt.Net;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace GroupLearning.Models;
 
+[Index(nameof(Email), IsUnique = true)]
+[Index(nameof(PhoneNumber), IsUnique = true)]
 public class User
 {
   [Key]
@@ -32,6 +31,8 @@ public class User
   [EmailAddress]
   public string Email { get; set; }
 
+  public bool IsEmailVerified { get; set; } = false;
+
   [Required]
   public string PasswordHash { get; set; }
 
@@ -39,6 +40,8 @@ public class User
 
   [StringLength(15)]
   public string PhoneNumber { get; set; }
+
+  public bool IsPhoneNumberVerified { get; set; } = false;
 
   public bool IsActive { get; set; } = true;
 

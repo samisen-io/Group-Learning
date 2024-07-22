@@ -14,6 +14,29 @@ public class UserService : IUserService
     _context = context;
   }
 
+  public async Task<User> GetUserByEmail(string email)
+  {
+    User? user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+    if (user == null)
+    {
+      return null;
+    }
+
+    return user;
+  }
+
+  public async Task<User> GetUserByPhoneNumber(string phoneNumber)
+  {
+    User? user = await _context.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+
+    if (user == null)
+    {
+      return null;
+    }
+
+    return user;
+  }
+
   public async Task<User> GetUserByCredentialsAsync(string email, string password)
   {
     // Find user by username

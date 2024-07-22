@@ -1,8 +1,16 @@
 using GroupLearning.Data;
 using GroupLearning.Interfaces.DataServices;
+using GroupLearning.Interfaces.EmailServices;
+using GroupLearning.Interfaces.OtpServices;
+using GroupLearning.Interfaces.SmsServices;
 using GroupLearning.Services.DataServices;
+using GroupLearning.Services.EmailServices;
+using GroupLearning.Services.OtpServices;
+using GroupLearning.Services.SmsServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Net;
+using System.Net.Mail;
 using System.Text.Json.Serialization;
 using App = GroupLearning.Components.App;
 
@@ -22,6 +30,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite
   builder.Configuration.GetConnectionString("localDb")));
 
 // Change to AddScoped for proper handling of DbContext lifecycle
+
+//AddSingleTon
+builder.Services.AddSingleton<IOtpStoreService, OtpStoreService>();
+
+//AddScoped
 builder.Services.AddScoped<IAppService, AppService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserGroupService, UserGroupService>();
@@ -29,6 +42,22 @@ builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IFileService, FileService>();
+
+//AddTransient
+builder.Services.AddTransient<IOtpService, OtpService>();
+builder.Services.AddTransient<IEmailService, EmailService>(provider =>
+{
+  SmtpClient smtpClient = new("demo34125@gmail.com")
+  {
+    Port = 587,
+    Credentials = new NetworkCredential("GroupLearning", "orse wxwr crjv sxry"),
+    EnableSsl = true
+  };
+  return new EmailService(smtpClient);
+});
+builder.Services.AddTransient<ISmsService, SmsService>(provider =>
+    new SmsService("your-twilio-account-sid", "your-twilio-auth-token", "your-twilio-phone-number"));
+
 
 // Add Swagger services
 builder.Services.AddSwaggerGen(c =>
@@ -64,12 +93,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
 
-app.UseEndpoints(endpoints =>
-{
-  endpoints.MapControllers();
-  endpoints.MapBlazorHub();
-  endpoints.MapFallbackToPage("/_Host");
-});
+
+app.MapControllers();
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
