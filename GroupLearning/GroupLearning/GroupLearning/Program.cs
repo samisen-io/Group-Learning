@@ -3,12 +3,17 @@ using GroupLearning.Interfaces.DataServices;
 using GroupLearning.Services.DataServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using App = GroupLearning.Components.App;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+  .AddJsonOptions(options =>
+   {
+     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+   });
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();

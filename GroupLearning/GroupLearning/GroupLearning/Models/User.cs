@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace GroupLearning.Models;
 
@@ -44,7 +45,12 @@ public class User
   [StringLength(100)]
   public string Role { get; set; } = "User";
 
+  //[JsonIgnore]
   public virtual ICollection<UserGroup> UserGroups { get; set; } = new List<UserGroup>();
+
+  //[JsonIgnore]
   public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+
+  //[JsonIgnore]
   public virtual ICollection<File> Files { get; set; } = new List<File>();
 }

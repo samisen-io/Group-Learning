@@ -1,4 +1,6 @@
-﻿using GroupLearning.Interfaces.DataServices;
+﻿using GroupLearning.Extensions;
+using GroupLearning.Interfaces.DataServices;
+using GroupLearning.Models.RequestModel;
 using Microsoft.AspNetCore.Mvc;
 using File = GroupLearning.Models.File;
 
@@ -9,10 +11,14 @@ namespace GroupLearning.Controllers;
 public class FileController : ControllerBase
 {
   private readonly IFileService _fileService;
+  private readonly IUserService _UserService;
+  private readonly IGroupService _GroupService;
 
-  public FileController(IFileService fileService)
+  public FileController(IFileService fileService, IUserService userService, IGroupService groupService)
   {
     _fileService = fileService;
+    _UserService = userService;
+    _GroupService = groupService;
   }
 
   [HttpGet("{id}")]
@@ -35,11 +41,39 @@ public class FileController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<File>> CreateFile([FromBody] File file)
+  public async Task<ActionResult<File>> CreateFile(IFormFile uploadFile, int userId, int groupId)
   {
+    long fileSize = ((uploadFile.OpenReadStream().Length) / 1024) / 1024;
+
+    if (fileSize > 5) throw new Exception("FileSize is greater than 5 MB");
+
+    File file = new()
+    {
+      FileSize  = fileSize,
+      UserId = userId,
+      User = await _UserService.GetUserByIdAsync(userId),
+      GroupId = groupId,
+      Group = await _GroupService.GetGroupByIdAsync(groupId),
+    };
+
+    if (uploadFile == null || uploadFile.Length == 0)
+    {
+      return BadRequest("No file uploaded.");
+    }
+
+    using (var memoryStream = new MemoryStream())
+    {
+      await uploadFile.CopyToAsync(memoryStream);
+      file.FileContent = memoryStream.ToArray();
+      file.FileName = uploadFile.FileName;
+      file.ContentType = uploadFile.ContentType;
+    }
+
     var createdFile = await _fileService.CreateFileAsync(file);
+
     return CreatedAtAction(nameof(GetFileById), new { id = createdFile.Id }, createdFile);
   }
+
 
   [HttpPut("{id}")]
   public async Task<ActionResult<File>> UpdateFile(int id, [FromBody] File file)

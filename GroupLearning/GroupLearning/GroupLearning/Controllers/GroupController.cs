@@ -1,5 +1,6 @@
 ﻿using GroupLearning.Interfaces.DataServices;
 using GroupLearning.Models;
+using GroupLearning.Models.RequestModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GroupLearning.Controllers;
@@ -35,9 +36,13 @@ public class GroupController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<Group>> CreateGroup([FromBody] Group group)
+  public async Task<ActionResult<Group>> CreateGroup([FromBody] GroupRequestModel groupRequest)
   {
-    var createdGroup = await _groupService.CreateGroupAsync(group);
+    var createdGroup = await _groupService.CreateGroupAsync(new Group
+    {
+      Name = groupRequest.Name, Description = groupRequest.Description
+    });
+
     return CreatedAtAction(nameof(GetGroupById), new { id = createdGroup.Id }, createdGroup);
   }
 

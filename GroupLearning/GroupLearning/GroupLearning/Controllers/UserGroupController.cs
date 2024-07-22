@@ -1,5 +1,6 @@
 ﻿using GroupLearning.Interfaces.DataServices;
 using GroupLearning.Models;
+using GroupLearning.Models.RequestModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GroupLearning.Controllers;
@@ -9,10 +10,16 @@ namespace GroupLearning.Controllers;
 public class UserGroupController : ControllerBase
 {
   private readonly IUserGroupService _userGroupService;
+  private readonly IUserService _userService;
+  private readonly IGroupService _groupService;
 
-  public UserGroupController(IUserGroupService userGroupService)
+  public UserGroupController(IUserGroupService userGroupService,
+                             IUserService userService,
+                             IGroupService groupService)
   {
     _userGroupService = userGroupService;
+    _userService = userService;
+    _groupService = groupService;
   }
 
   [HttpGet("{userId}/{groupId}")]
@@ -35,9 +42,18 @@ public class UserGroupController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<UserGroup>> CreateUserGroup([FromBody] UserGroup userGroup)
+  public async Task<ActionResult<UserGroup>> CreateUserGroup([FromBody] UserGroupRequestModel userGroupRequest)
   {
-    var createdUserGroup = await _userGroupService.CreateUserGroupAsync(userGroup);
+    User user = await _userService.GetUserByIdAsync(userGroupRequest.UserId);
+    Group group = await _groupService.GetGroupByIdAsync(userGroupRequest.GroupId);
+    UserGroup createdUserGroup = await _userGroupService.CreateUserGroupAsync(new UserGroup
+    {
+      GroupId = userGroupRequest.GroupId,
+      Group = group,
+      UserId = userGroupRequest.UserId,
+      User = user,
+    });
+
     return CreatedAtAction(nameof(GetUserGroup), new { userId = createdUserGroup.UserId, groupId = createdUserGroup.GroupId }, createdUserGroup);
   }
 

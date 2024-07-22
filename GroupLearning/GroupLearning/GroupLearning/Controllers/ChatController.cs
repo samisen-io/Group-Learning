@@ -9,16 +9,19 @@ namespace GroupLearning.Controllers;
 public class ChatController : ControllerBase
 {
   private readonly IChatService _chatService;
+  private readonly IGroupService _groupService;
 
-  public ChatController(IChatService chatService)
+  public ChatController(IChatService chatService,
+                        IGroupService groupService)
   {
     _chatService = chatService;
+    _groupService = groupService;
   }
 
   [HttpGet("{id}")]
   public async Task<ActionResult<Chat>> GetChatById(int id)
   {
-    var chat = await _chatService.GetChatByIdAsync(id);
+    Chat? chat = await _chatService.GetChatByIdAsync(id);
     if (chat == null)
     {
       return NotFound();
@@ -35,8 +38,16 @@ public class ChatController : ControllerBase
   }
 
   [HttpPost]
-  public async Task<ActionResult<Chat>> CreateChat([FromBody] Chat chat)
+  public async Task<ActionResult<Chat>> CreateChat([FromQuery] int GroupId)
   {
+    Group group = await _groupService.GetGroupByIdAsync(GroupId);
+
+    Chat chat = new()
+    {
+      GroupId = GroupId,
+      Group = group
+    };
+
     var createdChat = await _chatService.CreateChatAsync(chat);
     return CreatedAtAction(nameof(GetChatById), new { id = createdChat.Id }, createdChat);
   }

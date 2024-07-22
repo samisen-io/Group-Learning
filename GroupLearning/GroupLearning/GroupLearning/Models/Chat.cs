@@ -17,7 +17,7 @@ public class Chat
   [ForeignKey("Group")]
   public int GroupId { get; set; }
 
-  public Group Group { get; set; }
+  public virtual Group Group { get; set; }
 
   public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 }

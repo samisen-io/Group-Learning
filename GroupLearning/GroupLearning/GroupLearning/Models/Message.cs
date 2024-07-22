@@ -21,11 +21,11 @@ public class Message
   [ForeignKey("User")]
   public int UserId { get; set; }
 
-  public User User { get; set; }
+  public virtual User User { get; set; }
 
   [Required]
   [ForeignKey("Chat")]
   public int ChatId { get; set; }
 
-  public Chat Chat { get; set; }
+  public virtual Chat Chat { get; set; }
 }

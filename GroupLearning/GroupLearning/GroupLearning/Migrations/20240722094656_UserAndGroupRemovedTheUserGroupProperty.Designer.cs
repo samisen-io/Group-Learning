@@ -3,6 +3,7 @@ using System;
 using GroupLearning.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GroupLearning.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240722094656_UserAndGroupRemovedTheUserGroupProperty")]
+    partial class UserAndGroupRemovedTheUserGroupProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
@@ -81,16 +84,16 @@ namespace GroupLearning.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("FileSize")
+                    b.Property<int?>("GroupId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("GroupId")
+                    b.Property<int>("UploadedById")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UploadedOn")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Uuid")
@@ -161,8 +164,6 @@ namespace GroupLearning.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
 
                     b.HasIndex("UserId");
 
@@ -248,61 +249,43 @@ namespace GroupLearning.Migrations
 
             modelBuilder.Entity("GroupLearning.Models.Chat", b =>
                 {
-                    b.HasOne("GroupLearning.Models.Group", "Group")
+                    b.HasOne("GroupLearning.Models.Group", null)
                         .WithMany("Chats")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("GroupLearning.Models.File", b =>
                 {
-                    b.HasOne("GroupLearning.Models.Group", "Group")
+                    b.HasOne("GroupLearning.Models.Group", null)
                         .WithMany("Files")
                         .HasForeignKey("GroupId");
 
-                    b.HasOne("GroupLearning.Models.User", "User")
+                    b.HasOne("GroupLearning.Models.User", null)
                         .WithMany("Files")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("User");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("GroupLearning.Models.Message", b =>
                 {
-                    b.HasOne("GroupLearning.Models.Chat", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GroupLearning.Models.User", "User")
+                    b.HasOne("GroupLearning.Models.User", null)
                         .WithMany("Messages")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Chat");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GroupLearning.Models.UserGroup", b =>
                 {
                     b.HasOne("GroupLearning.Models.Group", "Group")
-                        .WithMany("UserGroups")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GroupLearning.Models.User", "User")
-                        .WithMany("UserGroups")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -310,11 +293,6 @@ namespace GroupLearning.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("GroupLearning.Models.Chat", b =>
-                {
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("GroupLearning.Models.Group", b =>
@@ -322,8 +300,6 @@ namespace GroupLearning.Migrations
                     b.Navigation("Chats");
 
                     b.Navigation("Files");
-
-                    b.Navigation("UserGroups");
                 });
 
             modelBuilder.Entity("GroupLearning.Models.User", b =>
@@ -331,8 +307,6 @@ namespace GroupLearning.Migrations
                     b.Navigation("Files");
 
                     b.Navigation("Messages");
-
-                    b.Navigation("UserGroups");
                 });
 #pragma warning restore 612, 618
         }

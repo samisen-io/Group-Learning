@@ -17,7 +17,7 @@ public class UserService : IUserService
   public async Task<User> GetUserByCredentialsAsync(string email, string password)
   {
     // Find user by username
-    var user = await _context.User.FirstOrDefaultAsync(u => u.Email == email);
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
     if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
     {
       return null;
@@ -28,25 +28,25 @@ public class UserService : IUserService
 
   public async Task<User> GetUserByIdAsync(int id)
   {
-    return await _context.User.FindAsync(id);
+    return await _context.Users.FindAsync(id);
   }
 
   public async Task<IEnumerable<User>> GetAllUsersAsync()
   {
-    return await _context.User.ToListAsync();
+    return await _context.Users.ToListAsync();
   }
 
   public async Task<User> CreateUserAsync(User user)
   {
     user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-    _context.User.Add(user);
+    _context.Users.Add(user);
     await _context.SaveChangesAsync();
     return user;
   }
 
   public async Task<User> UpdateUserAsync(User user)
   {
-    var existingUser = await _context.User.FindAsync(user.Id);
+    var existingUser = await _context.Users.FindAsync(user.Id);
     if (existingUser == null)
     {
       return null; // Or throw an exception if preferred
@@ -58,20 +58,20 @@ public class UserService : IUserService
 
     existingUser.UpdatedOn = DateTime.UtcNow;
 
-    _context.User.Update(existingUser);
+    _context.Users.Update(existingUser);
     await _context.SaveChangesAsync();
     return existingUser;
   }
 
   public async Task<bool> DeleteUserAsync(int id)
   {
-    var user = await _context.User.FindAsync(id);
+    var user = await _context.Users.FindAsync(id);
     if (user == null)
     {
       return false;
     }
 
-    _context.User.Remove(user);
+    _context.Users.Remove(user);
     await _context.SaveChangesAsync();
     return true;
   }
