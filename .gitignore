@@ -8,3 +8,5 @@
 /GroupLearning/GroupLearning/GroupLearning/obj
 /GroupLearning/GroupLearning/GroupLearning.Client/bin/Debug/net8.0
 /GroupLearning/GroupLearning/GroupLearning.Client/obj
+*.db-shm
+*.db-wal

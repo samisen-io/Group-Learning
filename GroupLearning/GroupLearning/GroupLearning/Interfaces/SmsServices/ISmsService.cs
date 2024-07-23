@@ -1,6 +1,6 @@
-﻿namespace GroupLearning.Interfaces.SmsServices;
+﻿//namespace GroupLearning.Interfaces.SmsServices;
 
-public interface ISmsService
-{
-  Task SendOtpAsync(string phoneNumber, string otp);
-}
+//public interface ISmsService
+//{
+//  Task SendOtpAsync(string phoneNumber, string otp);
+//}

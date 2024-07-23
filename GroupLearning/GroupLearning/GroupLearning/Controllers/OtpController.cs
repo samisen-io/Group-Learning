@@ -1,8 +1,8 @@
 ﻿using GroupLearning.Extensions;
 using GroupLearning.Interfaces.DataServices;
 using GroupLearning.Interfaces.EmailServices;
+using GroupLearning.Interfaces.OneSignalServices;
 using GroupLearning.Interfaces.OtpServices;
-using GroupLearning.Interfaces.SmsServices;
 using GroupLearning.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,16 +13,16 @@ public class OtpController : ControllerBase
   private readonly IOtpService _otpService;
   private readonly IOtpStoreService _otpStoreService;
   private readonly IEmailService _emailService;
-  private readonly ISmsService _smsService;
   private readonly IUserService _userService;
+  private readonly IOneSignalService _oneSignalService;
 
-  public OtpController(IOtpService otpService, IOtpStoreService otpStoreService, IEmailService emailService, ISmsService smsService, IUserService userService)
+  public OtpController(IOtpService otpService, IOtpStoreService otpStoreService, IEmailService emailService, IUserService userService, IOneSignalService oneSignalService)
   {
     _otpStoreService = otpStoreService;
     _emailService = emailService;
-    _smsService = smsService;
     _otpService = otpService;
     _userService = userService;
+    _oneSignalService = oneSignalService;
   }
 
   [HttpPost("send-otp")]
@@ -38,7 +38,7 @@ public class OtpController : ControllerBase
     {
       string otpPhone = _otpService.GenerateOtp();
       _otpStoreService.StoreOtp(phoneNumber, otpPhone);
-      await _smsService.SendOtpAsync(phoneNumber, otpPhone);
+      await _oneSignalService.SendSmsAsync(phoneNumber, $"The User Otp : {otpPhone}");
     }
     else throw new Exception("The email and phone number should not be empty or null. ");
 

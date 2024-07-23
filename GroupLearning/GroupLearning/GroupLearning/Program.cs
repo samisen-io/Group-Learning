@@ -1,12 +1,12 @@
 using GroupLearning.Data;
 using GroupLearning.Interfaces.DataServices;
 using GroupLearning.Interfaces.EmailServices;
+using GroupLearning.Interfaces.OneSignalServices;
 using GroupLearning.Interfaces.OtpServices;
-using GroupLearning.Interfaces.SmsServices;
 using GroupLearning.Services.DataServices;
 using GroupLearning.Services.EmailServices;
+using GroupLearning.Services.OneSignalService;
 using GroupLearning.Services.OtpServices;
-using GroupLearning.Services.SmsServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Net;
@@ -54,8 +54,13 @@ builder.Services.AddTransient<IEmailService, EmailService>(provider =>
   };
   return new EmailService(smtpClient);
 });
-builder.Services.AddTransient<ISmsService, SmsService>(provider =>
-    new SmsService("your-twilio-account-sid", "your-twilio-auth-token", "your-twilio-phone-number"));
+builder.Services.AddTransient<IOneSignalService, OneSignalService>(provider =>
+{
+  //var httpClient = provider.GetRequiredService<HttpClient>();
+  var apiKey = "MmI5MzA5YzMtNGMyOS00YTJlLWI5ZmQtMTU5Mzk4ZTdmMTNh";
+  var appId = " 14a8291e-1aef-4fdb-90c7-a1a596d77741";
+  return new OneSignalService(/*httpClient,*/ apiKey, appId);
+});
 
 
 // Add Swagger services
