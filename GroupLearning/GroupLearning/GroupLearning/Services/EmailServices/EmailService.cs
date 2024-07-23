@@ -20,7 +20,16 @@ public class EmailService : IEmailService
       Body = $"Your OTP code is: {otp}"
     };
 
-    await _smtpClient.SendMailAsync(mailMessage);
+    try
+    {
+      await _smtpClient.SendMailAsync(mailMessage);
+    }
+    catch (Exception e)
+    {
+
+      throw new Exception(e.Message);
+    }
+    
   }
 }
 

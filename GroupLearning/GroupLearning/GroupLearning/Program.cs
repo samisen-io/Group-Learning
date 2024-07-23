@@ -47,10 +47,9 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddTransient<IOtpService, OtpService>();
 builder.Services.AddTransient<IEmailService, EmailService>(provider =>
 {
-  SmtpClient smtpClient = new("demo34125@gmail.com")
+  SmtpClient smtpClient = new("smtp.gmail.com", 587)
   {
-    Port = 587,
-    Credentials = new NetworkCredential("GroupLearning", "orse wxwr crjv sxry"),
+    Credentials = new NetworkCredential("demo34125@gmail.com", "orse wxwr crjv sxry"),
     EnableSsl = true
   };
   return new EmailService(smtpClient);
