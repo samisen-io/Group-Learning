@@ -1,12 +1,11 @@
-﻿@page "/"
-@page "/login"
+﻿@page "/signup"
 @layout GroupLearning.Components.Layout.LoginLayout
 @inject NavigationManager _navigationManager
 
-<h3 style="text-align: center;">Login</h3>
+<h3 style="text-align: center;">Sign Up</h3>
 
 <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
-    <form @onsubmit="HandleLogin">
+    <form @onsubmit="HandleSignUp">
         <div style="margin-bottom: 15px;">
             <label for="firstname" style="display: block; margin-bottom: 5px;">First Name:</label>
             <input id="firstname" type="text" @bind="firstName" placeholder="Enter your first name" 
@@ -24,9 +23,9 @@
         </div>
         <button type="submit"
                 style="width: 100%; padding: 10px; border: none; border-radius: 4px; background-color: #007bff; color: white; font-size: 16px; cursor: pointer;">
-            Login
+            Sign Up
         </button>
-        <p style="text-align: center; margin-top: 10px;">Don't have an account? <a href="/signup">Sign Up</a></p>
+        <p style="text-align: center; margin-top: 10px;">Already have an account? <a href="/login">Login</a></p>
         @if (!string.IsNullOrEmpty(errorMessage))
         {
             <p style="color: red; text-align: center; margin-top: 10px;">@errorMessage</p>
@@ -37,24 +36,25 @@
 @code {
     private string firstName { get; set; }
     private string lastName { get; set; }
+    private string email { get; set; }
     private string phoneNumber { get; set; }
     private string errorMessage { get; set; }
 
-    private void HandleLogin()
+    private void HandleSignUp()
     {
-        if (IsValidUser(firstName, lastName, phoneNumber))
+        if (IsValidUser(firstName, lastName, email, phoneNumber))
         {
             _navigationManager.NavigateTo("home");
         }
         else
         {
-            errorMessage = "Invalid login details";
+            errorMessage = "Invalid sign-up details";
         }
     }
 
-    private bool IsValidUser(string firstName, string lastName, string phoneNumber)
+    private bool IsValidUser(string firstName, string lastName, string email, string phoneNumber)
     {
         return !string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName)
-               && !string.IsNullOrWhiteSpace(phoneNumber);
+               && !string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(phoneNumber);
     }
 }
