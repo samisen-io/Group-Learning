@@ -16,8 +16,12 @@ public class File
   [StringLength(255)]
   public string FileName { get; set; }
 
+  public string ContentType { get; set; }
+
+  public long FileSize { get; set; }
+
   [Required]
-  public File FileObject { get; set; }
+  public byte[] FileContent { get; set; }
 
   public DateTime DateTime { get; set; } = DateTime.UtcNow;
 
@@ -25,12 +29,12 @@ public class File
 
   [Required]
   [ForeignKey("User")]
-  public int UploadedById { get; set; }
+  public int UserId { get; set; }
 
-  public User UploadedBy { get; set; }
+  public virtual User User { get; set; }
 
   [ForeignKey("Group")]
   public int? GroupId { get; set; }
 
-  public Group Group { get; set; }
+  public virtual Group Group { get; set; }
 }

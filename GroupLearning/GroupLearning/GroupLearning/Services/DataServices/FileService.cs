@@ -40,8 +40,7 @@ public class FileService : IFileService
     }
 
     existingFile.FileName = file.FileName;
-    existingFile.FileObject = file.FileObject;
-    existingFile.UploadedById = file.UploadedById;
+    existingFile.UserId = file.UserId;
 
     existingFile.UploadedOn = file.UploadedOn;
     _context.Files.Update(existingFile);

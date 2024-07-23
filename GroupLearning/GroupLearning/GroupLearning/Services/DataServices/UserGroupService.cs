@@ -17,16 +17,14 @@ public class UserGroupService : IUserGroupService
   public async Task<UserGroup> GetUserGroupAsync(int userId, int groupId)
   {
     return await _context.UserGroups
-        .Include(ug => ug.User)
-        .Include(ug => ug.Group)
+        .Include(c => c.Group)
+        .Include(c => c.User)
         .FirstOrDefaultAsync(ug => ug.UserId == userId && ug.GroupId == groupId);
   }
 
   public async Task<IEnumerable<UserGroup>> GetAllUserGroupsAsync()
   {
     return await _context.UserGroups
-        .Include(ug => ug.User)
-        .Include(ug => ug.Group)
         .ToListAsync();
   }
 

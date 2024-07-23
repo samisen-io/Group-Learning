@@ -7,7 +7,7 @@ namespace GroupLearning.Data;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
   public DbSet<App> App { get; set; }
-  public DbSet<User> User { get; set; }
+  public DbSet<User> Users { get; set; }
   public DbSet<Group> Groups { get; set; }
   public DbSet<UserGroup> UserGroups { get; set; }
   public DbSet<Chat> Chats { get; set; }

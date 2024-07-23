@@ -1,12 +1,27 @@
 using GroupLearning.Data;
 using GroupLearning.Interfaces.DataServices;
+using GroupLearning.Interfaces.EmailServices;
+using GroupLearning.Interfaces.OneSignalServices;
+using GroupLearning.Interfaces.OtpServices;
 using GroupLearning.Services.DataServices;
+using GroupLearning.Services.EmailServices;
+using GroupLearning.Services.OneSignalService;
+using GroupLearning.Services.OtpServices;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Net;
+using System.Net.Mail;
+using System.Text.Json.Serialization;
 using App = GroupLearning.Components.App;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers()
+  .AddJsonOptions(options =>
+   {
+     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+   });
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
@@ -15,6 +30,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite
   builder.Configuration.GetConnectionString("localDb")));
 
 // Change to AddScoped for proper handling of DbContext lifecycle
+
+//AddSingleTon
+builder.Services.AddSingleton<IOtpStoreService, OtpStoreService>();
+
+//AddScoped
 builder.Services.AddScoped<IAppService, AppService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserGroupService, UserGroupService>();
@@ -23,12 +43,44 @@ builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
+//AddTransient
+builder.Services.AddTransient<IOtpService, OtpService>();
+builder.Services.AddTransient<IEmailService, EmailService>(provider =>
+{
+  SmtpClient smtpClient = new("smtp.gmail.com", 587)
+  {
+    Credentials = new NetworkCredential("demo34125@gmail.com", "orse wxwr crjv sxry"),
+    EnableSsl = true
+  };
+  return new EmailService(smtpClient);
+});
+builder.Services.AddTransient<IOneSignalService, OneSignalService>(provider =>
+{
+  //var httpClient = provider.GetRequiredService<HttpClient>();
+  var apiKey = "MmI5MzA5YzMtNGMyOS00YTJlLWI5ZmQtMTU5Mzk4ZTdmMTNh";
+  var appId = " 14a8291e-1aef-4fdb-90c7-a1a596d77741";
+  return new OneSignalService(/*httpClient,*/ apiKey, appId);
+});
+
+
+// Add Swagger services
+builder.Services.AddSwaggerGen(c =>
+{
+  c.SwaggerDoc("v1", new OpenApiInfo { Title = "GroupLearning API", Version = "v1" });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
   app.UseWebAssemblyDebugging();
+  app.UseSwagger();
+  app.UseSwaggerUI(c =>
+  {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "GroupLearning API v1");
+    c.RoutePrefix = "Swagger"; // To serve the Swagger UI at the app's root (http://localhost:<port>/)
+  });
 }
 else
 {
@@ -38,9 +90,18 @@ else
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseAntiforgery();
+
+
+app.MapControllers();
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
